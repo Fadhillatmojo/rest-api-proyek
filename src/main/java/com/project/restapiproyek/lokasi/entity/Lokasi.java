@@ -1,10 +1,13 @@
 package com.project.restapiproyek.lokasi.entity;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import jakarta.persistence.*;
 import lombok.Getter;
 import lombok.Setter;
+import com.project.restapiproyek.proyek.entity.Proyek;
 
 import java.time.LocalDateTime;
+import java.util.Set;
 
 @Entity
 @Table(name="lokasi")
@@ -29,6 +32,10 @@ public class Lokasi {
 
     @Column(name = "created_at", nullable = false)
     private LocalDateTime createdAt;
+
+    @ManyToMany(mappedBy = "lokasi")
+    @JsonIgnore
+    private Set<Proyek> proyek;
 
     @PrePersist
     protected void onCreate() {
