@@ -1,6 +1,7 @@
 package com.project.restapiproyek.proyek.controller;
 
 import com.project.restapiproyek.DTO.ProyekDTO;
+import com.project.restapiproyek.DTO.ProyekDetailDTO;
 import com.project.restapiproyek.proyek.entity.Proyek;
 import com.project.restapiproyek.proyek.repository.ProyekRepository;
 import com.project.restapiproyek.proyek.service.ProyekService;
@@ -25,8 +26,13 @@ public class ProyekController {
 
     // get proyek by ID endpoint
     @GetMapping("/findProyekById")
-    private Proyek findById(@RequestParam int id) {
-        return proyekService.findById(id);
+    private ResponseEntity<ProyekDetailDTO> findProyekById(@RequestParam int id) {
+        try {
+            ProyekDetailDTO proyekDetailDTO = proyekService.findProyekById(id);
+            return ResponseEntity.ok(proyekDetailDTO); // Return 200 OK with ProyekDTO in response body
+        } catch (RuntimeException e) {
+            return ResponseEntity.status(HttpStatus.NOT_FOUND).build(); // Return 404 Not Found if the project doesn't exist
+        }
     }
 
     // post proyek endpoint

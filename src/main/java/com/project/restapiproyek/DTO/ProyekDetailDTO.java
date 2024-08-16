@@ -8,19 +8,15 @@ import java.util.Set;
 
 @Getter
 @Setter
-public class ProyekDTO {
-    private Integer Id;
+public class ProyekDetailDTO {
+    private Integer id;
     private String namaProyek;
-
-    private String client;
-
-    private LocalDate tglMulai;
-
-    private LocalDate tglSelesai;
-
     private String pimpinanProyek;
-
+    private String client;
+    private LocalDate tglMulai;
+    private LocalDate tglSelesai;
     private String keterangan;
+    private Set<LokasiDTO> lokasiSet;
 
-    private Set<Integer> lokasiIds;
+    // Getters and Setters
 }

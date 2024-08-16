@@ -1,6 +1,8 @@
 package com.project.restapiproyek.proyek.service;
 
+import com.project.restapiproyek.DTO.LokasiDTO;
 import com.project.restapiproyek.DTO.ProyekDTO;
+import com.project.restapiproyek.DTO.ProyekDetailDTO;
 import com.project.restapiproyek.lokasi.entity.Lokasi;
 import com.project.restapiproyek.lokasi.repository.LokasiRepository;
 import com.project.restapiproyek.proyek.entity.Proyek;
@@ -12,6 +14,7 @@ import java.util.HashSet;
 import java.util.List;
 import java.util.Optional;
 import java.util.Set;
+import java.util.stream.Collectors;
 
 @Service
 public class ProyekService {
@@ -26,15 +29,43 @@ public class ProyekService {
     }
 
     // ini fungsi find ID nanti bisa dipake di update atau delete atau bisa juga buat show misal ada show
-    public Proyek findById(int id) {
-        Optional<Proyek> proyek = proyekRepository.findById(id);
+    public ProyekDetailDTO findProyekById(int id) {
+        Proyek proyek = proyekRepository.findById(id)
+                .orElseThrow(() -> new RuntimeException("Proyek not found with id: " + id));
 
-        if (proyek.isEmpty()) {
-            throw new RuntimeException("Proyek Tidak Ditemukan!");
-        }
+        ProyekDetailDTO proyekDetailDTO = new ProyekDetailDTO();
+        proyekDetailDTO.setId(proyek.getId());
+        proyekDetailDTO.setNamaProyek(proyek.getNamaProyek());
+        proyekDetailDTO.setPimpinanProyek(proyek.getPimpinanProyek());
+        proyekDetailDTO.setClient(proyek.getClient());
+        proyekDetailDTO.setTglMulai(proyek.getTglMulai());
+        proyekDetailDTO.setTglSelesai(proyek.getTglSelesai());
+        proyekDetailDTO.setKeterangan(proyek.getKeterangan());
 
-        return proyek.get();
+        Set<LokasiDTO> lokasiDTOSet = proyek.getLokasi().stream().map(lokasi -> {
+            LokasiDTO lokasiDTO = new LokasiDTO();
+            lokasiDTO.setId(lokasi.getId());
+            lokasiDTO.setNamaLokasi(lokasi.getNamaLokasi());
+            lokasiDTO.setKota(lokasi.getKota());
+            lokasiDTO.setNegara(lokasi.getNegara());
+            lokasiDTO.setProvinsi(lokasi.getProvinsi());
+            return lokasiDTO;
+        }).collect(Collectors.toSet());
+
+        proyekDetailDTO.setLokasiSet(lokasiDTOSet);
+
+        return proyekDetailDTO;
+
     }
+//    public Proyek findProyekById(int id) {
+//        Optional<Proyek> proyek = proyekRepository.findById(id);
+//
+//        if (proyek.isEmpty()) {
+//            throw new RuntimeException("Proyek Tidak Ditemukan!");
+//        }
+//
+//        return proyek.get();
+//    }
 
     // ini post request
     public Proyek saveProyek(ProyekDTO proyekDTO) {
