@@ -5,6 +5,8 @@ import com.project.restapiproyek.proyek.entity.Proyek;
 import com.project.restapiproyek.proyek.repository.ProyekRepository;
 import com.project.restapiproyek.proyek.service.ProyekService;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
@@ -35,13 +37,29 @@ public class ProyekController {
 
     // update proyek endpoint
     @PutMapping("/proyek")
-    public Proyek update(@RequestParam int id, @RequestBody Proyek proyek) {
-        return proyekService.updateProyek(id, proyek);
+    public ResponseEntity<Proyek> updateProyek(@RequestParam Integer id, @RequestBody ProyekDTO proyekDTO) {
+        try {
+            Proyek updatedProyek = proyekService.updateProyek(id, proyekDTO);
+            return ResponseEntity.ok(updatedProyek);
+        } catch (RuntimeException e) {
+            return ResponseEntity.status(HttpStatus.NOT_FOUND).body(null);
+        }
     }
+//
+//    public Proyek update(@RequestParam int id, @RequestBody Proyek proyek) {
+//        return proyekService.updateProyek(id, proyek);
+//    }
 
     // delete proyek endpoint
     @DeleteMapping("/proyek")
-    public String delete(@RequestParam int id) {
-        return proyekService.deleteProyek(id);
+//    public String delete(@RequestParam int id) {
+//        return proyekService.deleteProyek(id);
+//    }
+    public String delete(@RequestParam Integer id) {
+        try {
+            return proyekService.deleteProyek(id); // Return 204 No Content on successful deletion
+        } catch (RuntimeException e) {
+            return "Proyek Not Found"; // Return 404 Not Found if the project doesn't exist
+        }
     }
 }

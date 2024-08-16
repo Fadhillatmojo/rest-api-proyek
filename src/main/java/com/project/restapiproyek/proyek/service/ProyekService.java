@@ -61,26 +61,57 @@ public class ProyekService {
 //        return proyekRepository.save(proyek);
 //    }
 
-    // ini update request
-    public Proyek updateProyek(int id, Proyek proyek) {
-        // pertama cari dulu ada gak id nya proyek di database
+    public Proyek updateProyek(Integer id, ProyekDTO proyekDTO) {
+        Proyek proyek = proyekRepository.findById(id)
+                .orElseThrow(() -> new RuntimeException("Proyek not found with id: " + id));
 
-        Proyek existingProyek = findById(id);
-        existingProyek.setNamaProyek(proyek.getNamaProyek());
-        existingProyek.setPimpinanProyek(proyek.getPimpinanProyek());
-        existingProyek.setClient(proyek.getClient());
-        existingProyek.setTglMulai(proyek.getTglMulai());
-        existingProyek.setTglSelesai(proyek.getTglSelesai());
-        existingProyek.setKeterangan(proyek.getKeterangan());
+        proyek.setNamaProyek(proyekDTO.getNamaProyek());
+        proyek.setPimpinanProyek(proyekDTO.getPimpinanProyek());
+        proyek.setClient(proyekDTO.getClient());
+        proyek.setTglMulai(proyekDTO.getTglMulai());
+        proyek.setTglSelesai(proyekDTO.getTglSelesai());
+        proyek.setKeterangan(proyekDTO.getKeterangan());
 
-        return proyekRepository.save(existingProyek);
+        Set<Lokasi> lokasiSet = new HashSet<>();
+        for (Integer lokasiId : proyekDTO.getLokasiIds()) {
+            Lokasi lokasi = lokasiRepository.findById(lokasiId)
+                    .orElseThrow(() -> new RuntimeException("Lokasi not found with id: " + lokasiId));
+            lokasiSet.add(lokasi);
+        }
+
+        proyek.setLokasi(lokasiSet);
+        return proyekRepository.save(proyek);
     }
+//
+//
+//    // ini update request
+//    public Proyek updateProyek(int id, Proyek proyek) {
+//        // pertama cari dulu ada gak id nya proyek di database
+//
+//        Proyek existingProyek = findById(id);
+//        existingProyek.setNamaProyek(proyek.getNamaProyek());
+//        existingProyek.setPimpinanProyek(proyek.getPimpinanProyek());
+//        existingProyek.setClient(proyek.getClient());
+//        existingProyek.setTglMulai(proyek.getTglMulai());
+//        existingProyek.setTglSelesai(proyek.getTglSelesai());
+//        existingProyek.setKeterangan(proyek.getKeterangan());
+//
+//        return proyekRepository.save(existingProyek);
+//    }
 
     // ini Delete
-    public String deleteProyek(int id) {
-        // pertama cari dulu ada gak id nya proyek di database
-        proyekRepository.delete(findById(id));
-
+//    public String deleteProyek(int id) {
+//        // pertama cari dulu ada gak id nya proyek di database
+//        proyekRepository.delete(findById(id));
+//
+//        return "Proyek Sukses Dihapus!";
+//    }
+    public String deleteProyek(Integer id) {
+        Proyek proyek = proyekRepository.findById(id)
+                .orElseThrow(() -> new RuntimeException("Proyek not found with id: " + id));
+        proyekRepository.delete(proyek);
         return "Proyek Sukses Dihapus!";
     }
+
+
 }
