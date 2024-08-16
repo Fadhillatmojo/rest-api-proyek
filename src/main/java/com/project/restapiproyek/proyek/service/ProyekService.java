@@ -1,17 +1,24 @@
 package com.project.restapiproyek.proyek.service;
 
+import com.project.restapiproyek.DTO.ProyekDTO;
+import com.project.restapiproyek.lokasi.entity.Lokasi;
+import com.project.restapiproyek.lokasi.repository.LokasiRepository;
 import com.project.restapiproyek.proyek.entity.Proyek;
 import com.project.restapiproyek.proyek.repository.ProyekRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import java.util.HashSet;
 import java.util.List;
 import java.util.Optional;
+import java.util.Set;
 
 @Service
 public class ProyekService {
     @Autowired
     private ProyekRepository proyekRepository;
+    @Autowired
+    private LokasiRepository lokasiRepository;
 
     // Get All Proyek
     public List<Proyek> getAllProyekWithLokasi() {
@@ -30,9 +37,29 @@ public class ProyekService {
     }
 
     // ini post request
-    public Proyek saveProyek(Proyek proyek) {
+    public Proyek saveProyek(ProyekDTO proyekDTO) {
+        Proyek proyek = new Proyek();
+        proyek.setNamaProyek(proyekDTO.getNamaProyek());
+        proyek.setPimpinanProyek(proyekDTO.getPimpinanProyek());
+        proyek.setClient(proyekDTO.getClient());
+        proyek.setTglMulai(proyekDTO.getTglMulai());
+        proyek.setTglSelesai(proyekDTO.getTglSelesai());
+        proyek.setKeterangan(proyekDTO.getKeterangan());
+
+        Set<Lokasi> lokasiSet = new HashSet<>();
+        for (Integer lokasiId : proyekDTO.getLokasiIds()) {
+            Lokasi lokasi = lokasiRepository.findById(lokasiId)
+                    .orElseThrow(() -> new RuntimeException("Lokasi not found with id: " + lokasiId));
+            lokasiSet.add(lokasi);
+        }
+
+        proyek.setLokasi(lokasiSet);
         return proyekRepository.save(proyek);
+
     }
+//    public Proyek saveProyek(Proyek proyek) {
+//        return proyekRepository.save(proyek);
+//    }
 
     // ini update request
     public Proyek updateProyek(int id, Proyek proyek) {

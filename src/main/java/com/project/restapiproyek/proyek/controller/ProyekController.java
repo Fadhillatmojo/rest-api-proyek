@@ -1,5 +1,6 @@
 package com.project.restapiproyek.proyek.controller;
 
+import com.project.restapiproyek.DTO.ProyekDTO;
 import com.project.restapiproyek.proyek.entity.Proyek;
 import com.project.restapiproyek.proyek.repository.ProyekRepository;
 import com.project.restapiproyek.proyek.service.ProyekService;
@@ -28,8 +29,8 @@ public class ProyekController {
 
     // post proyek endpoint
     @PostMapping("/proyek")
-    public Proyek save(@RequestBody Proyek proyek) {
-        return proyekService.saveProyek(proyek);
+    public Proyek save(@RequestBody ProyekDTO proyekDTO) {
+        return proyekService.saveProyek(proyekDTO);
     }
 
     // update proyek endpoint
