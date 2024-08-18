@@ -42,6 +42,8 @@ spring.jpa.hibernate.ddl-auto=update
 ```
 Pastikan untuk mengganti nama_database, nama_pengguna, dan katasandi dengan nilai yang sesuai.
 
+Buat Table di dalam dataase anda menggunakan file SQL yang sudah saya sediakan di atas bernama restapiproyek.sql masukkan ke dalam database anda lalu RUN query SQL tersebut 
+
 Menjalankan Proyek
 Untuk menjalankan aplikasi Spring Boot, gunakan perintah berikut:
 
